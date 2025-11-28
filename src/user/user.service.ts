@@ -58,10 +58,10 @@ export class UserService {
     const user = this.findById(id);
 
     if (user.password !== dto.oldPassword) {
-      throw new ForbiddenException('Old Password is not correct');
+      throw new ForbiddenException('old password is not correct');
     }
 
-    (user.password = dto.newPassword), (user.updatedAt = date);
+    (user.password = dto.newPassword), (user.updatedAt = date), user.version++;
     return user;
   }
 

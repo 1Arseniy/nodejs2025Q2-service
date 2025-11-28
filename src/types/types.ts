@@ -8,3 +8,11 @@ export interface User {
 }
 
 export type Users = User[];
+
+export interface Artist {
+  id: string;
+  name: string;
+  grammy: boolean;
+}
+
+export type Artists = Artist[];

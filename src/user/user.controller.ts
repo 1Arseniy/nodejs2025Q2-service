@@ -37,6 +37,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @UsePipes(ValidationPipe)
   update(
     @Param('id', new ParseUUIDPipe())
     id: string,
