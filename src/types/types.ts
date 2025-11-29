@@ -1,4 +1,4 @@
-export interface User {
+export interface TypeUser {
   id: string;
   login: string;
   password: string;
@@ -7,7 +7,7 @@ export interface User {
   updatedAt: number;
 }
 
-export type Users = User[];
+export type Users = TypeUser[];
 
 export interface Artist {
   id: string;

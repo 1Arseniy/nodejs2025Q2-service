@@ -30,13 +30,13 @@ export class ArtistController {
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
 
   @Put(':id')
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
