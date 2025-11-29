@@ -5,6 +5,5 @@ export class CreateUserDto {
   readonly login: string;
 
   @IsNotEmpty()
-  // @Exclude()
   readonly password: string;
 }

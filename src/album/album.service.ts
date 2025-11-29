@@ -11,6 +11,10 @@ export class AlbumService {
 
   constructor(private readonly ArtistService: ArtistService) {}
 
+  private getArtistById(id: string) {
+    return this.ArtistService.artists.find((artist) => artist.id === id);
+  }
+
   findAll() {
     return this.albums;
   }
@@ -26,13 +30,13 @@ export class AlbumService {
   }
 
   create(createAlbumDto: CreateAlbumDto) {
-    const artist = this.ArtistService.findById(createAlbumDto.artistId);
+    const artist = this.getArtistById(createAlbumDto.artistId);
 
     const album: Album = {
       id: randomUUID(),
       name: createAlbumDto.name,
       year: createAlbumDto.year,
-      artistId: artist.id,
+      artistId: artist ? artist.id : null,
     };
 
     this.albums.push(album);
@@ -42,9 +46,9 @@ export class AlbumService {
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const album = this.findById(id);
-    const artist = this.ArtistService.findById(updateAlbumDto.artistId);
+    const artist = this.getArtistById(updateAlbumDto.artistId);
 
-    album.artistId = artist.id;
+    album.artistId = artist ? artist.id : null;
     album.name = updateAlbumDto.name;
     album.year = updateAlbumDto.year;
 

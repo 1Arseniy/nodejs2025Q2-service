@@ -7,8 +7,7 @@ import {
   Delete,
   ParseUUIDPipe,
   Put,
-  UsePipes,
-  ValidationPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -29,13 +28,11 @@ export class AlbumController {
   }
 
   @Post()
-  // @UsePipes(ValidationPipe)
   create(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
   }
 
   @Put(':id')
-  // @UsePipes(ValidationPipe)
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
@@ -44,6 +41,7 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   delete(@Param('id') id: string) {
     return this.albumService.delete(id);
   }

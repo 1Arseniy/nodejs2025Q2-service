@@ -8,8 +8,6 @@ import {
   ParseUUIDPipe,
   Put,
   HttpCode,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -30,13 +28,11 @@ export class ArtistController {
   }
 
   @Post()
-  // @UsePipes(ValidationPipe)
   create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
   }
 
   @Put(':id')
-  // @UsePipes(ValidationPipe)
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
