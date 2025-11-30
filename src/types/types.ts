@@ -20,9 +20,9 @@ export type Artists = Artist[];
 export interface Track {
   id: string;
   name: string;
-  artistId: string | null; // refers to Artist
-  albumId: string | null; // refers to Album
-  duration: number; // integer number
+  artistId: string | null;
+  albumId: string | null;
+  duration: number;
 }
 
 export type Tracks = Track[];
@@ -35,3 +35,9 @@ export interface Album {
 }
 
 export type Albums = Album[];
+
+export interface Favorites {
+  artists: Artists;
+  albums: Albums;
+  tracks: Tracks;
+}

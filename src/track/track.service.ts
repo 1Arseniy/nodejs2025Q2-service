@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track, Tracks } from 'src/types/types';
@@ -11,7 +16,10 @@ export class TrackService {
   tracks: Tracks = [];
 
   constructor(
+    @Inject(forwardRef(() => ArtistService))
     private ArtistService: ArtistService,
+
+    @Inject(forwardRef(() => AlbumService))
     private AlbumService: AlbumService,
   ) {}
 

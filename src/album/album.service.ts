@@ -1,15 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album, Albums } from 'src/types/types';
 import { randomUUID } from 'crypto';
 import { ArtistService } from 'src/artist/artist.service';
+import { TrackService } from 'src/track/track.service';
 
 @Injectable()
 export class AlbumService {
   albums: Albums = [];
 
-  constructor(private readonly ArtistService: ArtistService) {}
+  constructor(
+    @Inject(forwardRef(() => ArtistService))
+    private readonly ArtistService: ArtistService,
+
+    @Inject(forwardRef(() => TrackService))
+    private readonly TrackService: TrackService,
+  ) {}
 
   private getArtistById(id: string) {
     return this.ArtistService.artists.find((artist) => artist.id === id);
@@ -59,5 +71,18 @@ export class AlbumService {
     const albumForDel = this.findById(id);
 
     this.albums = this.albums.filter((album) => album.id !== albumForDel.id);
+
+    const tracks = this.TrackService.findAll();
+
+    tracks.forEach((track) => {
+      if (track.albumId === id) {
+        this.TrackService.update(track.id, {
+          name: track.name,
+          albumId: null,
+          artistId: track.artistId,
+          duration: track.duration,
+        });
+      }
+    });
   }
 }
