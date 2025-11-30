@@ -48,7 +48,7 @@ export class FavsService {
       throw new NotFoundException('Track with this id not found');
     }
 
-    this.favorites.tracks = this.TrackService.tracks.filter(
+    this.favorites.tracks = this.favorites.tracks.filter(
       (track) => track.id !== favoriteTrack.id,
     );
   }
@@ -74,7 +74,7 @@ export class FavsService {
       throw new NotFoundException('Track with this id not found');
     }
 
-    this.favorites.albums = this.AlbumService.albums.filter(
+    this.favorites.albums = this.favorites.albums.filter(
       (album) => album.id !== favoriteAlbum.id,
     );
   }
@@ -102,7 +102,7 @@ export class FavsService {
       throw new NotFoundException('Track with this id not found');
     }
 
-    this.favorites.artists = this.ArtistService.artists.filter(
+    this.favorites.artists = this.favorites.artists.filter(
       (artist) => artist.id !== favoriteArtist.id,
     );
   }

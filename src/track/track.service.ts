@@ -10,6 +10,7 @@ import { Track, Tracks } from 'src/types/types';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { randomUUID } from 'crypto';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class TrackService {
@@ -21,6 +22,9 @@ export class TrackService {
 
     @Inject(forwardRef(() => AlbumService))
     private AlbumService: AlbumService,
+
+    @Inject(forwardRef(() => FavsService))
+    private FavsService: FavsService,
   ) {}
 
   private getArtistById(id: string) {
@@ -79,5 +83,11 @@ export class TrackService {
     const trackForDel = this.findById(id);
 
     this.tracks = this.tracks.filter((track) => track.id !== trackForDel.id);
+
+    try {
+      this.FavsService.deleteTrack(id);
+    } catch {
+      console.log('Error');
+    }
   }
 }

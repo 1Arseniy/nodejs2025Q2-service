@@ -13,5 +13,6 @@ import { TrackModule } from 'src/track/track.module';
   ],
   controllers: [FavsController],
   providers: [FavsService],
+  exports: [FavsService],
 })
 export class FavsModule {}

@@ -1,3 +1,7 @@
+### ❗️ Please don't forget to copy .env.example to .env with port 4000, if there's no 'env'.
+
+### ❗️ Please don't forget to run server (npm run start:dev) before running tests (npm run test)
+
 # Home Library Service
 
 ## Prerequisites
@@ -15,6 +19,12 @@ git clone {repository URL}
 
 ```
 npm install
+```
+
+## Create .env file
+
+```
+cp .env.example .env
 ```
 
 ## Running application
