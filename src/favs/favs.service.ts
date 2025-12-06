@@ -79,10 +79,11 @@ export class FavsService {
     );
   }
 
-  addArtist(id: string) {
-    const artist = this.ArtistService.artists.find(
-      (artist) => artist.id === id,
-    );
+  async addArtist(id: string) {
+    const artist = await this.ArtistService.findById(id);
+    // const artist = this.ArtistService.artists.find(
+    //   (artist) => artist.id === id,
+    // );
 
     if (!artist) {
       throw new HttpException('Artist with this id not found', 422);

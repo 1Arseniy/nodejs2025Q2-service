@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+// import { randomUUID } from 'crypto';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
@@ -14,18 +14,18 @@ export class User {
   @Column()
   version: number;
 
-  @Column()
+  @Column({ type: 'bigint' })
   createdAt: number;
 
-  @Column()
+  @Column({ type: 'bigint' })
   updatedAt: number;
 
-  constructor(login: string, password: string) {
-    this.id = randomUUID();
-    this.login = login;
-    this.password = password;
-    this.version = 1;
-    this.createdAt = Date.now();
-    this.updatedAt = Date.now();
-  }
+  // constructor(login: string, password: string) {
+  //   this.id = randomUUID();
+  //   this.login = login;
+  //   this.password = password;
+  //   this.version = 1;
+  //   this.createdAt = Date.now();
+  //   this.updatedAt = Date.now();
+  // }
 }

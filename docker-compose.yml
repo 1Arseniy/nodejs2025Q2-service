@@ -23,6 +23,8 @@ services:
       - '3000:3000'
     depends_on:
       - postgres
+    volumes:
+      - ./src:/usr/src/app/src
     command: npm run start:dev
 
 networks:

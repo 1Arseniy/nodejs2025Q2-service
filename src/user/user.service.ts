@@ -1,18 +1,27 @@
 import {
   ForbiddenException,
+  // ForbiddenException,
   Injectable,
   NotFoundException,
+  // NotFoundException,
 } from '@nestjs/common';
 
-import { TypeUser, Users } from 'src/types/types';
+import { TypeUser } from 'src/types/types';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePasswordDto } from './dto/update-user.dto';
+// import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UpdatePasswordDto } from './dto/update-user.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UserService {
-  private users: Users = [];
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
   private returnRes(user: TypeUser): ResponseUserDto {
     return {
@@ -24,12 +33,20 @@ export class UserService {
     };
   }
 
-  findAll() {
-    return Array.from(this.users, (el) => this.returnRes(el));
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find({
+      select: {
+        createdAt: true,
+        id: true,
+        login: true,
+        updatedAt: true,
+        version: true,
+      },
+    });
   }
 
-  findById(id: string, all?: boolean) {
-    const user = this.users.find((user) => user.id === id);
+  async findById(id: string, all?: boolean) {
+    const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException('Not Found');
@@ -38,30 +55,47 @@ export class UserService {
     return all ? user : this.returnRes(user);
   }
 
-  create(dto: CreateUserDto) {
-    const user = new User(dto.login, dto.password);
+  async create(dto: CreateUserDto) {
+    const date = Date.now();
+    const userObj: TypeUser = {
+      id: randomUUID(),
+      login: dto.login,
+      password: dto.password,
+      createdAt: date,
+      updatedAt: date,
+      version: 1,
+    };
 
-    this.users.push(user);
+    const user = this.usersRepository.create(userObj);
+    await this.usersRepository.save(user);
+    // const user = new User(dto.login, dto.password);
+
+    // this.users.push(user);
 
     return this.returnRes(user);
   }
 
-  update(dto: UpdatePasswordDto, id: string) {
+  async update(dto: UpdatePasswordDto, id: string) {
     const date = Date.now();
-    const user = <TypeUser>this.findById(id, true);
+    const user = await (<Promise<User>>this.findById(id, true));
 
+    // await this.usersRepository.update(id, dto);
     if (user.password !== dto.oldPassword) {
       throw new ForbiddenException('old password is not correct');
     }
 
     (user.password = dto.newPassword), (user.updatedAt = date), user.version++;
 
+    await this.usersRepository.save(user);
+
     return this.returnRes(user);
   }
 
-  delete(id: string) {
-    const userForDel = this.findById(id);
+  async delete(id: string) {
+    const res = await this.usersRepository.delete(id);
 
-    this.users = this.users.filter((user) => user.id !== userForDel.id);
+    if (res.affected === 0) {
+      throw new NotFoundException(`User not found`);
+    }
   }
 }

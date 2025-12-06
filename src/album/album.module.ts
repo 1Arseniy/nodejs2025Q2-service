@@ -4,7 +4,6 @@ import { AlbumController } from './album.controller';
 import { ArtistModule } from 'src/artist/artist.module';
 import { TrackModule } from 'src/track/track.module';
 import { FavsModule } from 'src/favs/favs.module';
-
 @Module({
   imports: [
     forwardRef(() => ArtistModule),

@@ -27,8 +27,9 @@ export class TrackService {
     private FavsService: FavsService,
   ) {}
 
-  private getArtistById(id: string) {
-    return this.ArtistService.artists.find((artist) => artist.id === id);
+  private async getArtistById(id: string) {
+    return await this.ArtistService.findById(id);
+    // return this.ArtistService..find((artist) => artist.id === id);
   }
 
   private getAlbumById(id: string) {
@@ -49,8 +50,8 @@ export class TrackService {
     return track;
   }
 
-  create(createTrackDto: CreateTrackDto) {
-    const artist = this.getArtistById(createTrackDto.artistId);
+  async create(createTrackDto: CreateTrackDto) {
+    const artist = await this.getArtistById(createTrackDto.artistId);
     const album = this.getAlbumById(createTrackDto.albumId);
 
     const track: Track = {
@@ -66,9 +67,9 @@ export class TrackService {
     return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const track = this.findById(id);
-    const artist = this.getArtistById(updateTrackDto.artistId);
+    const artist = await this.getArtistById(updateTrackDto.artistId);
     const album = this.getAlbumById(updateTrackDto.albumId);
 
     track.name = updateTrackDto.name;

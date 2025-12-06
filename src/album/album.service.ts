@@ -27,8 +27,9 @@ export class AlbumService {
     private readonly FavsService: FavsService,
   ) {}
 
-  private getArtistById(id: string) {
-    return this.ArtistService.artists.find((artist) => artist.id === id);
+  private async getArtistById(id: string) {
+    return await this.ArtistService.findById(id);
+    // return this.ArtistService.artists.find((artist) => artist.id === id);
   }
 
   findAll() {
@@ -45,8 +46,8 @@ export class AlbumService {
     return album;
   }
 
-  create(createAlbumDto: CreateAlbumDto) {
-    const artist = this.getArtistById(createAlbumDto.artistId);
+  async create(createAlbumDto: CreateAlbumDto) {
+    const artist = await this.getArtistById(createAlbumDto.artistId);
 
     const album: Album = {
       id: randomUUID(),
@@ -60,9 +61,9 @@ export class AlbumService {
     return album;
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const album = this.findById(id);
-    const artist = this.getArtistById(updateAlbumDto.artistId);
+    const artist = await this.getArtistById(updateAlbumDto.artistId);
 
     album.artistId = artist ? artist.id : null;
     album.name = updateAlbumDto.name;

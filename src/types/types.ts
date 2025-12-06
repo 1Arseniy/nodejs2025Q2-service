@@ -9,13 +9,13 @@ export interface TypeUser {
 
 export type Users = TypeUser[];
 
-export interface Artist {
+export interface TypeArtist {
   id: string;
   name: string;
   grammy: boolean;
 }
 
-export type Artists = Artist[];
+export type Artists = TypeArtist[];
 
 export interface Track {
   id: string;
