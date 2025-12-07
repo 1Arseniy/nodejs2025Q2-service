@@ -9,6 +9,7 @@
     "node": ">=22.14.0"
   },
   "scripts": {
+    "docker:up": "docker compose up --build",
     "audit": "npm audit",
     "prebuild": "rimraf dist",
     "build": "nest build",

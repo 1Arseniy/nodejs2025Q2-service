@@ -1,7 +1,3 @@
-### ❗️ Please don't forget to copy .env.example to .env with port 4000, if there's no 'env'.
-
-### ❗️ Please don't forget to run server (npm run start:dev) before running tests (npm run test)
-
 # Home Library Service
 
 ## Prerequisites
@@ -25,6 +21,12 @@ npm install --legacy-peer-deps
 
 ```
 cp .env.example .env
+```
+
+## start docker container
+
+```
+npm run docker:up
 ```
 
 ## Running application
@@ -73,6 +75,12 @@ npm run lint
 
 ```
 npm run format
+```
+
+### npm script for vulnerabilities scanning (free solution)
+
+```
+npm run audit
 ```
 
 ### Debugging in VSCode

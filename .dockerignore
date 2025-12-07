@@ -6,6 +6,7 @@ Thumbs.db
 .git
 .gitignore
 .dockerignore
+Dockerfile
 
 .vscode/
 .idea/
