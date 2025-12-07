@@ -21,14 +21,19 @@ export class FavsService {
     private AlbumService: AlbumService,
     @Inject(forwardRef(() => TrackService))
     private TrackService: TrackService,
+
+    // @InjectRepository(Fav)
+    // private favsRepository: Repository<Fav>,
   ) {}
 
   findAll() {
     return this.favorites;
   }
 
-  addTrack(id: string) {
-    const track = this.TrackService.tracks.find((track) => track.id === id);
+  async addTrack(id: string) {
+    const track = (await this.TrackService.findAll()).find(
+      (track) => track.id === id,
+    );
 
     if (!track) {
       throw new HttpException('Track with this id not found', 422);
@@ -53,8 +58,10 @@ export class FavsService {
     );
   }
 
-  addAlbum(id: string) {
-    const album = this.AlbumService.albums.find((album) => album.id === id);
+  async addAlbum(id: string) {
+    const album = (await this.AlbumService.findAll()).find(
+      (album) => album.id === id,
+    );
 
     if (!album) {
       throw new HttpException('Album with this id not found', 422);
@@ -79,8 +86,8 @@ export class FavsService {
     );
   }
 
-  addArtist(id: string) {
-    const artist = this.ArtistService.artists.find(
+  async addArtist(id: string) {
+    const artist = (await this.ArtistService.findAll()).find(
       (artist) => artist.id === id,
     );
 

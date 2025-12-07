@@ -6,16 +6,17 @@ import {
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { Track, Tracks } from 'src/types/types';
+import { TypeTrack } from 'src/types/types';
 import { ArtistService } from 'src/artist/artist.service';
 import { AlbumService } from 'src/album/album.service';
 import { randomUUID } from 'crypto';
 import { FavsService } from 'src/favs/favs.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Track } from './entities/track.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TrackService {
-  tracks: Tracks = [];
-
   constructor(
     @Inject(forwardRef(() => ArtistService))
     private ArtistService: ArtistService,
@@ -25,22 +26,27 @@ export class TrackService {
 
     @Inject(forwardRef(() => FavsService))
     private FavsService: FavsService,
+
+    @InjectRepository(Track)
+    private tracksRepository: Repository<Track>,
   ) {}
 
-  private getArtistById(id: string) {
-    return this.ArtistService.artists.find((artist) => artist.id === id);
+  private async getArtistById(id: string) {
+    return (await this.ArtistService.findAll()).find(
+      (artist) => artist.id === id,
+    );
   }
 
-  private getAlbumById(id: string) {
-    return this.AlbumService.albums.find((album) => album.id === id);
+  private async getAlbumById(id: string) {
+    return (await this.AlbumService.findAll()).find((album) => album.id === id);
   }
 
-  findAll() {
-    return this.tracks;
+  async findAll() {
+    return await this.tracksRepository.find();
   }
 
-  findById(id: string) {
-    const track = this.tracks.find((track) => track.id === id);
+  async findById(id: string) {
+    const track = await this.tracksRepository.findOneBy({ id });
 
     if (!track) {
       throw new NotFoundException('Not Found');
@@ -49,11 +55,11 @@ export class TrackService {
     return track;
   }
 
-  create(createTrackDto: CreateTrackDto) {
-    const artist = this.getArtistById(createTrackDto.artistId);
-    const album = this.getAlbumById(createTrackDto.albumId);
+  async create(createTrackDto: CreateTrackDto) {
+    const artist = await this.getArtistById(createTrackDto.artistId);
+    const album = await this.getAlbumById(createTrackDto.albumId);
 
-    const track: Track = {
+    const trackObj: TypeTrack = {
       id: randomUUID(),
       name: createTrackDto.name,
       artistId: artist ? artist.id : null,
@@ -61,28 +67,30 @@ export class TrackService {
       duration: createTrackDto.duration,
     };
 
-    this.tracks.push(track);
+    const track = this.tracksRepository.create(trackObj);
 
-    return track;
+    return this.tracksRepository.save(track);
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.findById(id);
-    const artist = this.getArtistById(updateTrackDto.artistId);
-    const album = this.getAlbumById(updateTrackDto.albumId);
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
+    const track = await this.findById(id);
+    const artist = await this.getArtistById(updateTrackDto.artistId);
+    const album = await this.getAlbumById(updateTrackDto.albumId);
 
     track.name = updateTrackDto.name;
     track.artistId = artist ? artist.id : null;
     track.albumId = album ? album.id : null;
     track.duration = updateTrackDto.duration;
 
-    return track;
+    return this.tracksRepository.save(track);
   }
 
-  delete(id: string) {
-    const trackForDel = this.findById(id);
+  async delete(id: string) {
+    const res = await this.tracksRepository.delete(id);
 
-    this.tracks = this.tracks.filter((track) => track.id !== trackForDel.id);
+    if (res.affected === 0) {
+      throw new NotFoundException(`User not found`);
+    }
 
     try {
       this.FavsService.deleteTrack(id);
