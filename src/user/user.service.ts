@@ -1,14 +1,11 @@
 import {
   ForbiddenException,
-  // ForbiddenException,
   Injectable,
   NotFoundException,
-  // NotFoundException,
 } from '@nestjs/common';
 
 import { TypeUser } from 'src/types/types';
 import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdatePasswordDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,8 +25,8 @@ export class UserService {
       id: user.id,
       login: user.login,
       version: user.version,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      createdAt: Number(user.createdAt),
+      updatedAt: Number(user.updatedAt),
     };
   }
 
@@ -68,10 +65,6 @@ export class UserService {
 
     const user = this.usersRepository.create(userObj);
     await this.usersRepository.save(user);
-    // const user = new User(dto.login, dto.password);
-
-    // this.users.push(user);
-
     return this.returnRes(user);
   }
 
@@ -79,7 +72,6 @@ export class UserService {
     const date = Date.now();
     const user = await (<Promise<User>>this.findById(id, true));
 
-    // await this.usersRepository.update(id, dto);
     if (user.password !== dto.oldPassword) {
       throw new ForbiddenException('old password is not correct');
     }

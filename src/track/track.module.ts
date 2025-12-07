@@ -6,9 +6,12 @@ import { AlbumModule } from 'src/album/album.module';
 
 import { forwardRef } from '@nestjs/common';
 import { FavsModule } from 'src/favs/favs.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Track } from './entities/track.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Track]),
     forwardRef(() => ArtistModule),
     forwardRef(() => AlbumModule),
     forwardRef(() => FavsModule),

@@ -17,7 +17,7 @@ export interface TypeArtist {
 
 export type Artists = TypeArtist[];
 
-export interface Track {
+export interface TypeTrack {
   id: string;
   name: string;
   artistId: string | null;
@@ -25,16 +25,16 @@ export interface Track {
   duration: number;
 }
 
-export type Tracks = Track[];
+export type Tracks = TypeTrack[];
 
-export interface Album {
+export interface TypeAlbum {
   id: string;
   name: string;
   year: number;
   artistId: string | null;
 }
 
-export type Albums = Album[];
+export type Albums = TypeAlbum[];
 
 export interface Favorites {
   artists: Artists;

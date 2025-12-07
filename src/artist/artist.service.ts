@@ -73,30 +73,29 @@ export class ArtistService {
       throw new NotFoundException(`User not found`);
     }
 
-    const albums = this.AlbumService.findAll();
+    const albums = await this.AlbumService.findAll();
 
-    albums.forEach((album) => {
+    for (const album of albums) {
       if (album.artistId === id) {
-        this.AlbumService.update(album.id, {
+        await this.AlbumService.update(album.id, {
           name: album.name,
           artistId: null,
           year: album.year,
         });
       }
-    });
+    }
 
-    const tracks = this.TrackService.findAll();
-
-    tracks.forEach((track) => {
+    const tracks = await this.TrackService.findAll();
+    for (const track of tracks) {
       if (track.artistId === id) {
-        this.TrackService.update(track.id, {
+        await this.TrackService.update(track.id, {
           name: track.name,
           albumId: track.albumId,
           artistId: null,
           duration: track.duration,
         });
       }
-    });
+    }
 
     try {
       this.FavsService.deleteArtist(id);
